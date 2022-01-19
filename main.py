@@ -24,13 +24,36 @@ def load_image(name, colorkey=None):
     return image
 
 
-class Car(pygame.sprite.Sprite):
+class Bullet(pygame.sprite.Sprite):
+    image = load_image("bl.png")
+
+    def __init__(self, gr, x, y):
+        super().__init__(gr)
+        self.image = Bullet.image
+        self.image1 = Bullet.image
+        self.rect = self.image.get_rect()
+        self.pos = pygame.math.Vector2(x, y)
+        self.rect.center = round(self.pos.x), round(self.pos.y)
+        g = math.degrees(math.atan2(self.rect.centerx - mousepos[0], self.rect.centery - mousepos[1]))
+        py = abs(g) / 90 - 1
+        if g < 0:
+            px = 1 - abs(py)
+        else:
+            px = (1 - abs(py)) * -1
+        self.dir = pygame.math.Vector2((px, py))
+
+    def update(self):
+        self.pos += self.dir * 20
+        self.rect.center = round(self.pos.x), round(self.pos.y)
+
+
+class MainCh(pygame.sprite.Sprite):
     image = load_image("mar.png")
 
-    def __init__(self, *gr):
-        super().__init__(*gr)
-        self.image = Car.image
-        self.image1 = Car.image
+    def __init__(self):
+        super().__init__()
+        self.image = MainCh.image
+        self.image1 = MainCh.image
         self.rect = self.image.get_rect()
         self.rect.x = 10
         self.rect.y = 30
@@ -49,14 +72,14 @@ class Car(pygame.sprite.Sprite):
 
     def update(self):
         self.rot = math.atan2(self.rect.centerx - mousepos[0], self.rect.centery - mousepos[1])
-        ad = event
         self.move()
         self.image = pygame.transform.rotate(self.image1, int(math.degrees(self.rot)) + 90)
 
 
 running = True
-cars = pygame.sprite.Group()
-Car(cars)
+sps = pygame.sprite.Group()
+char = MainCh()
+sps.add(char)
 while running:
     screen.fill((0, 0, 0))
     for event in pygame.event.get():
@@ -82,8 +105,10 @@ while running:
                 xr = False
             if event.key == pygame.K_LEFT:
                 xl = False
-    cars.draw(screen)
-    cars.update()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            Bullet(sps, char.rect.centerx, char.rect.centery)
+    sps.draw(screen)
+    sps.update()
     pygame.display.flip()
     cl.tick(60)
 pygame.quit()
