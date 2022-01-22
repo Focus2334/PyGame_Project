@@ -2,11 +2,14 @@ import os
 import sys
 import pygame
 import math
+import random
 
 pygame.init()
 size = width, height = 1000, 1000
 screen = pygame.display.set_mode(size)
+fps = 60
 cl = pygame.time.Clock()
+cl.tick(fps)
 mousepos = (0, 0)
 chpos = (0, 0)
 xr = False
@@ -47,6 +50,36 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.center = round(self.pos.x), round(self.pos.y)
 
 
+class Enemy(pygame.sprite.Sprite):
+    image = load_image("enemy.png")
+
+    def __init__(self, gr, x, y):
+        super().__init__(gr)
+        self.image = Enemy.image
+        self.image1 = Enemy.image
+        self.rect = self.image.get_rect()
+        self.pos = pygame.math.Vector2(x, y)
+        self.rect.center = round(self.pos.x), round(self.pos.y)
+        self.vec = True
+        self.rot = 0
+        self.dir = pygame.math.Vector2((0, 0))
+
+    def update(self):
+        if pygame.sprite.spritecollideany(self, blts):
+            self.kill()
+        self.rot = math.atan2(self.rect.centerx - char.rect.centerx, self.rect.centery - char.rect.centery)
+        g = int(math.degrees(self.rot))
+        py = abs(g) / 90 - 1
+        if g < 0:
+            px = 1 - abs(py)
+        else:
+            px = (1 - abs(py)) * -1
+        self.dir = pygame.math.Vector2((px, py))
+        self.pos += self.dir * 1
+        self.rect.center = round(self.pos.x), round(self.pos.y)
+        self.image = pygame.transform.rotate(self.image1, int(math.degrees(self.rot)))
+
+
 class MainCh(pygame.sprite.Sprite):
     image = load_image("mar.png")
 
@@ -77,10 +110,14 @@ class MainCh(pygame.sprite.Sprite):
 
 
 running = True
-sps = pygame.sprite.Group()
+chr = pygame.sprite.Group()
+enms = pygame.sprite.Group()
+blts = pygame.sprite.Group()
 char = MainCh()
-sps.add(char)
+chr.add(char)
+enm_spawn = 60 * 5
 while running:
+    print(cl.get_fps())
     screen.fill((0, 0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -106,9 +143,18 @@ while running:
             if event.key == pygame.K_LEFT:
                 xl = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            Bullet(sps, char.rect.centerx, char.rect.centery)
-    sps.draw(screen)
-    sps.update()
+            Bullet(blts, char.rect.centerx, char.rect.centery)
+    if enm_spawn < 0:
+        Enemy(enms, random.randint(10, 510), 500)
+        enm_spawn = fps * 5
+    else:
+        enm_spawn -= 1
+    blts.draw(screen)
+    chr.draw(screen)
+    enms.draw(screen)
+    enms.update()
+    chr.update()
+    blts.update()
     pygame.display.flip()
     cl.tick(60)
 pygame.quit()
