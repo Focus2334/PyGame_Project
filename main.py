@@ -171,7 +171,11 @@ class MainCh(pygame.sprite.Sprite):
         self.hp = 10
         self.scr = 0
         self.weapon = gun
-        self.wpns = weapons
+        self.wpns = []
+        for i in weapons:
+            if i not in self.wpns:
+                self.wpns.append(i)
+                print(self.wpns)
         self.vec = True
         self.rot = 0
 
@@ -233,6 +237,7 @@ def lvl1():
     wpimg = char.weapon['img']
     wpns = ['Gun', 'Avt', 'Shotgun']
     for i in cur.execute('SELECT * FROM weapon').fetchall():
+        print(i[0])
         for j in wpns:
             if i[0] == j:
                 if i[1] == 'True':
@@ -251,12 +256,14 @@ def lvl1():
                             if avt['name'] == i[0]:
                                 weapons.append(avt)
                         cur.execute(res)
-    curwp = char.wpns.index(char.weapon)
     rate = 1
     trpim = Trap.image
     trpdcn = 3
     trpcn = 3
-    char.wpns = weapons
+    for i in weapons:
+        if i not in char.wpns:
+            char.wpns.append(i)
+    curwp = char.wpns.index(char.weapon)
     while running:
 
         if char.weapon['bult'] == 0:
@@ -272,6 +279,7 @@ def lvl1():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 1)"
+                char.scr = 0
                 cur.execute(res)
                 con.commit()
                 running = False
@@ -289,6 +297,7 @@ def lvl1():
             if event.type == pygame.KEYDOWN:
                 if event.key == 27:
                     res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 1)"
+                    char.scr = 0
                     cur.execute(res)
                     con.commit()
                     running = False
@@ -396,6 +405,7 @@ def lvl1():
         screen.blit(hpic, (830, 650))
         if char.hp < 1:
             res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 1)"
+            char.scr = 0
             cur.execute(res)
             con.commit()
             start_screen()
@@ -428,6 +438,7 @@ def lvl2():
     wpns = ['Gun', 'Avt', 'Shotgun']
     for i in cur.execute('SELECT * FROM weapon').fetchall():
         for j in wpns:
+            print(i[0])
             if i[0] == j:
                 if i[1] == 'True':
                     if i[0] not in weapons:
@@ -445,12 +456,15 @@ def lvl2():
                             if avt['name'] == i[0]:
                                 weapons.append(avt)
                         cur.execute(res)
-    curwp = char.wpns.index(char.weapon)
+
     rate = 1
     trpim = Trap.image
     trpdcn = 3
     trpcn = 3
-    char.wpns = weapons
+    for i in weapons:
+        if i not in char.wpns:
+            char.wpns.append(i)
+    curwp = char.wpns.index(char.weapon)
     while running:
 
         if char.weapon['bult'] == 0:
@@ -466,6 +480,7 @@ def lvl2():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 2)"
+                char.scr = 0
                 cur.execute(res)
                 con.commit()
                 running = False
@@ -483,6 +498,7 @@ def lvl2():
             if event.type == pygame.KEYDOWN:
                 if event.key == 27:
                     res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 2)"
+                    char.scr = 0
                     cur.execute(res)
                     con.commit()
                     running = False
@@ -591,6 +607,7 @@ def lvl2():
         screen.blit(hpic, (830, 650))
         if char.hp < 1:
             res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 2)"
+            char.scr = 0
             cur.execute(res)
             con.commit()
             start_screen()
