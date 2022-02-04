@@ -275,6 +275,7 @@ def lvl1():
                 cur.execute(res)
                 con.commit()
                 running = False
+                return
             if event.type == pygame.MOUSEMOTION:
                 mousepos = event.pos
             if event.type == pygame.MOUSEWHEEL:
@@ -286,6 +287,13 @@ def lvl1():
                 char.weapon = char.wpns[curwp]
                 wpimg = char.weapon['img']
             if event.type == pygame.KEYDOWN:
+                if event.key == 27:
+                    res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 1)"
+                    cur.execute(res)
+                    con.commit()
+                    running = False
+                    main_menu()
+                    return
                 if event.key == 115:
                     char.weapon = gun
                 if event.key == 116:
@@ -461,6 +469,7 @@ def lvl2():
                 cur.execute(res)
                 con.commit()
                 running = False
+                return
             if event.type == pygame.MOUSEMOTION:
                 mousepos = event.pos
             if event.type == pygame.MOUSEWHEEL:
@@ -472,6 +481,13 @@ def lvl2():
                 char.weapon = char.wpns[curwp]
                 wpimg = char.weapon['img']
             if event.type == pygame.KEYDOWN:
+                if event.key == 27:
+                    res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 2)"
+                    cur.execute(res)
+                    con.commit()
+                    running = False
+                    main_menu()
+                    return
                 if event.key == 115:
                     char.weapon = gun
                 if event.key == 116:
@@ -635,9 +651,10 @@ def weaponry():
 def start_screen():
     intro_text = ["Bullet Time", "",
                   "Правила игры",
-                  "Собирайте снаряжение, пока не закончилось время.",
-                  "Оно вам пригодится, когда таймер покажет 00:00",
-                  "И враги начнут нападать отовсюду"]
+                  "Используйте ловушки или оружие для победы над врагами",
+                  "Сложность увеличивается со временем",
+                  "Убейте как можно больше врагов для получения баллов ",
+                  "за которые откроются новые уровни и вооружение"]
 
     fon = pygame.transform.scale(load_image('grass.png'), (width, height))
     screen.blit(fon, (0, 0))
