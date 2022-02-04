@@ -728,7 +728,9 @@ def main_menu():
         screen.blit(string_rendered, (50, 250))
         string_rendered = font.render(lvl2scr, True, pygame.Color('white'))
         screen.blit(string_rendered, (400, 250))
-        pygame.draw.rect(screen, (255, 255, 255), (width // 2 - 100, 600, 200, 80))
+        pygame.draw.rect(screen, (90, 150, 90), (width // 2 - 100, 600, 200, 80))
+        string_rendered = font.render("Оружейная", True, pygame.Color('white'))
+        screen.blit(string_rendered, (width // 2 - 75, 615))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
