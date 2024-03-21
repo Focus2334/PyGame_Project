@@ -275,7 +275,7 @@ def lvl1():
             char.weapon['bult'] = char.weapon['blmax']
         if char.weapon['nxt'] > 0:
             char.weapon['nxt'] -= 1
-        screen.fill((0, 0, 90))
+        screen.fill((240, 240, 240))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 res = "insert into score values (" + str(set_id()) + ", " + str(char.scr) + ", 1)"
